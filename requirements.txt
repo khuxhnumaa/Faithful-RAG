@@ -1,0 +1,33 @@
+# RAG Hallucination Detection System
+# Install all at once: pip install -r requirements.txt
+
+# ── Core RAG ────────────────────────────────
+langchain==0.2.16
+langchain-community==0.2.17
+langchain-core==0.2.38
+
+# ── Vector Store ─────────────────────────────
+faiss-cpu==1.8.0          # use faiss-gpu if you have CUDA
+
+# ── Embeddings (no API key needed) ───────────
+sentence-transformers==3.0.1
+transformers==4.44.2
+torch==2.4.0              # CPU version; for GPU: pip install torch --index-url https://download.pytorch.org/whl/cu121
+
+# ── PDF loading ───────────────────────────────
+pypdf==4.3.1
+
+# ── Week 2: NLI verifier ──────────────────────
+# (already covered by transformers above)
+
+# ── Week 4: RAGAS evaluation ──────────────────
+ragas==0.1.17
+datasets==2.20.0
+
+# ── Week 5: Streamlit UI ──────────────────────
+streamlit==1.37.1
+
+# ── Utilities ─────────────────────────────────
+python-dotenv==1.0.1      # for optional .env API keys
+tqdm==4.66.5
+numpy==1.26.4
