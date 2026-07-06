@@ -79,7 +79,7 @@ def run_rag_w2(
     db_path:       str  = DB_PATH,
     sim_threshold: float = SIM_THRESHOLD,
     top_k:         int   = TOP_K,
-    skip_nli:      bool  = False,
+    skip_nli:      bool  = True,
 ) -> RAGResultW2:
 
     # ── 1. Retrieve ───────────────────────────────────────────────────────────

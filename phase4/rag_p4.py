@@ -34,6 +34,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'week2'))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'week1'))
 
 from dataclasses import dataclass
+# from rag_pipeline_p3 import run_rag_w3, RAGResultW3
+
+# To include the correct path:
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'phase3'))
 from rag_pipeline_p3 import run_rag_w3, RAGResultW3
 from ragas_scorer    import RAGASScorer, RAGASScores
 from verifier        import Verifier, VerdictResult
