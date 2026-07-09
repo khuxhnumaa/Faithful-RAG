@@ -1,8 +1,3 @@
-"""
-Filters retrieved chunks based on cosine similarity score and Chunks below the threshold are dropped before reaching the LLM.
-This is the PREVENTION layer — stops bad context entering the LLM.
-"""
-
 from dataclasses import dataclass
 from typing import List, Tuple
 from langchain_core.documents import Document
@@ -34,8 +29,6 @@ class FilterResult:
 # ── Filter ────────────────────────────────────────────────────────────────────
 
 class SimilarityFilter:
-    """ Drops retrieved chunks whose cosine similarity score
-    falls below the threshold. """
 
     def __init__(self, threshold: float = DEFAULT_THRESHOLD):
         self.threshold = threshold
@@ -45,16 +38,7 @@ class SimilarityFilter:
         docs: List[Document],
         scores: List[float]
     ) -> FilterResult:
-        """
-        Filter docs by similarity score.
-
-        Args:
-            docs:   List of retrieved LangChain Documents
-            scores: Corresponding cosine similarity scores [0, 1]
-
-        Returns:
-            FilterResult with kept and dropped chunks
-        """
+        
         kept_docs, kept_scores     = [], []
         dropped_docs, dropped_scores = [], []
 
@@ -87,10 +71,7 @@ class SimilarityFilter:
         scores: List[float],
         thresholds: List[float] = [0.50, 0.60, 0.65, 0.72, 0.80, 0.85]
     ):
-        """
-        Helper: show how many chunks survive at each threshold value.
-        Use this to pick the right threshold for your dataset.
-        """
+        
         print("\n[similarity_filter] Threshold tuning:")
         print(f"  {'Threshold':<12} {'Kept':<8} {'Dropped':<10} Kept chunks")
         print("  " + "-" * 50)

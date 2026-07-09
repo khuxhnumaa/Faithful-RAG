@@ -1,49 +1,3 @@
-"""
-Week 4 - File 1: ragas_scorer.py
-----------------------------------
-WHAT THIS FILE DOES:
-    Takes the sentence-level NLI results from Week 3 and computes
-    three RAGAS metrics that together measure how good and how honest
-    the answer is.
-
-    Three metrics computed here:
-
-    1. FAITHFULNESS SCORE
-       Formula: grounded_sentences / total_sentences
-       Meaning: what fraction of the answer is actually supported by
-                the retrieved context?
-       Range:   0.0 (everything hallucinated) to 1.0 (everything grounded)
-       Source:  comes directly from Week 3's NLI detector output
-
-    2. ANSWER RELEVANCE SCORE
-       Meaning: does the answer actually address what the user asked?
-                A faithful answer can still be off-topic.
-       How:     embeds both the query and the answer, computes cosine
-                similarity between them.
-       Range:   0.0 (completely off-topic) to 1.0 (directly answers query)
-
-    3. CONTEXT RECALL SCORE
-       Meaning: did the retrieved chunks contain enough information
-                to answer the question fully?
-       How:     checks how many sentences in the answer can be traced
-                back to at least one retrieved chunk.
-       Range:   0.0 (retrieval missed everything) to 1.0 (retrieval complete)
-
-    COMBINED SCORE:
-       Weighted average of all three.
-       Default weights: faithfulness=0.5, relevance=0.3, recall=0.2
-       Faithfulness gets highest weight because it's the hallucination signal.
-
-WHY NO PAID API:
-    Original RAGAS uses GPT-4 internally to judge faithfulness.
-    This implementation replaces that with the NLI scores from Week 3
-    and sentence-transformers for embeddings — both free and local.
-
-Paper reference:
-    RAGAS: Automated Evaluation of Retrieval Augmented Generation
-    Es et al., 2023. arxiv.org/abs/2309.15217
-"""
-
 from dataclasses import dataclass
 from typing import List
 import sys, os
@@ -88,16 +42,6 @@ class RAGASScores:
 # ── Scorer ────────────────────────────────────────────────────────────────────
 
 class RAGASScorer:
-    """
-    Computes RAGAS-inspired metrics using local free tools.
-    No OpenAI key. No paid API.
-
-    Uses:
-      - Week 3 NLI detection output for faithfulness
-      - sentence-transformers for answer relevance (cosine similarity)
-      - sentence-level overlap for context recall
-    """
-
     def __init__(self):
         self._embedder = None   # lazy load
 
@@ -111,10 +55,6 @@ class RAGASScorer:
     # ── Metric 1: Faithfulness ────────────────────────────────────────────────
 
     def compute_faithfulness(self, detection: DetectionResult) -> float:
-        """
-        Directly uses the NLI-based faithfulness score from Week 3.
-        Formula: grounded_sentences / total_sentences
-        """
         score = detection.faithfulness_score
         print(f"[ragas] Faithfulness: {score:.4f} "
               f"({detection.grounded_count}/{detection.total} sentences grounded)")
@@ -123,13 +63,6 @@ class RAGASScorer:
     # ── Metric 2: Answer relevance ────────────────────────────────────────────
 
     def compute_answer_relevance(self, query: str, answer: str) -> float:
-        """
-        Measures how well the answer addresses the query.
-        Uses cosine similarity between query and answer embeddings.
-
-        Even if an answer is fully faithful to context, it might not
-        actually answer what was asked. This metric catches that.
-        """
         if not answer or not answer.strip():
             return 0.0
 
@@ -154,16 +87,6 @@ class RAGASScorer:
         detection: DetectionResult,
         context: str
     ) -> float:
-        """
-        Measures how much of the answer is traceable to the context.
-
-        Logic: for each sentence in the answer, check if any part of
-        the context contains semantically similar content.
-        Uses embedding similarity per sentence vs context chunks.
-
-        A low score means retrieval didn't find enough relevant info
-        — the LLM had to fill gaps from its own knowledge.
-        """
         from sentence_splitter import split_into_sentences
         import numpy as np
 
@@ -205,18 +128,6 @@ class RAGASScorer:
         context:   str,
         detection: DetectionResult,
     ) -> RAGASScores:
-        """
-        Compute all three RAGAS metrics and return combined score.
-
-        Args:
-            query:     original user question
-            answer:    LLM generated answer
-            context:   retrieved context chunks (combined string)
-            detection: Week 3 NLI DetectionResult
-
-        Returns:
-            RAGASScores with all metrics
-        """
         print(f"\n[ragas] Computing RAGAS metrics ...")
 
         f = self.compute_faithfulness(detection)

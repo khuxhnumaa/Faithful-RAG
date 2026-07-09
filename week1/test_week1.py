@@ -1,13 +1,3 @@
-"""
-Week 1 - Step 3: Test Script
-------------------------------
-Run this after ingest.py to verify your RAG pipeline works.
-Tests retrieval quality, context building, and end-to-end answering.
-
-Usage:
-    python test_week1.py
-"""
-
 import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))

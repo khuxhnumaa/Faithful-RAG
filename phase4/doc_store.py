@@ -1,35 +1,3 @@
-"""
-doc_store.py — Persistent Document Storage
-=============================================
-WHAT THIS FILE DOES:
-    Manages a local SQLite database that stores metadata about
-    every document the user uploads. This means documents persist
-    across page refreshes and app restarts.
-
-    Also manages the FAISS index folder for each document — each
-    document gets its own subfolder so switching between documents
-    just swaps the active FAISS path.
-
-    DATABASE: stored at data/doc_store.db (created automatically)
-    FAISS INDEXES: stored at data/indexes/<doc_id>/ (one per document)
-    UPLOADED FILES: stored at data/uploads/<filename>
-
-    TABLE: documents
-      id          TEXT  — unique ID (uuid4)
-      name        TEXT  — original filename
-      uploaded_at TEXT  — timestamp
-      chunk_count INT   — number of chunks indexed
-      file_path   TEXT  — path to saved original file
-      index_path  TEXT  — path to FAISS index folder
-
-Usage:
-    from doc_store import DocStore
-    db = DocStore()
-    db.save_document(doc_id, name, chunk_count, file_path, index_path)
-    docs = db.list_documents()
-    db.delete_document(doc_id)
-"""
-
 import sqlite3
 import os
 import shutil
@@ -78,12 +46,6 @@ class StoredDocument:
 # ── DocStore ──────────────────────────────────────────────────────────────────
 
 class DocStore:
-    """
-    SQLite-backed document store.
-    All methods are safe to call multiple times — the DB
-    and table are created automatically if they don't exist.
-    """
-
     def __init__(self, db_path: str = str(DB_PATH)):
         self.db_path = db_path
         self._init_db()
@@ -114,10 +76,6 @@ class DocStore:
         file_path:   str,
         index_path:  str,
     ) -> StoredDocument:
-        """
-        Save a new document record to the database.
-        If doc_id already exists, updates chunk_count and paths.
-        """
         now = datetime.now().isoformat()
         with self._connect() as conn:
             conn.execute("""
@@ -136,7 +94,6 @@ class DocStore:
         )
 
     def list_documents(self) -> List[StoredDocument]:
-        """Return all documents, newest first."""
         with self._connect() as conn:
             rows = conn.execute("""
                 SELECT id, name, uploaded_at, chunk_count, file_path, index_path
@@ -146,7 +103,6 @@ class DocStore:
         return [StoredDocument(*r) for r in rows]
 
     def get_document(self, doc_id: str) -> Optional[StoredDocument]:
-        """Get a single document by ID."""
         with self._connect() as conn:
             row = conn.execute("""
                 SELECT id, name, uploaded_at, chunk_count, file_path, index_path
@@ -155,12 +111,6 @@ class DocStore:
         return StoredDocument(*row) if row else None
 
     def delete_document(self, doc_id: str) -> bool:
-        """
-        Delete a document record AND its associated files:
-          - uploaded file
-          - FAISS index folder
-        Returns True if deleted, False if not found.
-        """
         doc = self.get_document(doc_id)
         if not doc:
             return False
@@ -184,7 +134,7 @@ class DocStore:
         return True
 
     def document_exists(self, name: str) -> Optional[StoredDocument]:
-        """Check if a document with this filename already exists."""
+        # Check if a document with this filename already exists
         with self._connect() as conn:
             row = conn.execute("""
                 SELECT id, name, uploaded_at, chunk_count, file_path, index_path
@@ -200,10 +150,8 @@ class DocStore:
 # ── Helper: get index path for a doc_id ──────────────────────────────────────
 
 def get_index_path(doc_id: str) -> str:
-    """Returns the FAISS index path for a given document ID."""
     return str(INDEXES_DIR / doc_id)
 
 
 def get_upload_path(filename: str) -> str:
-    """Returns the save path for an uploaded file."""
     return str(UPLOADS_DIR / filename)

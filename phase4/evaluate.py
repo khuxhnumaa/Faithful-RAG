@@ -1,46 +1,3 @@
-"""
-Week 4 - File 4: evaluate.py
-------------------------------
-WHAT THIS FILE DOES:
-    Runs a benchmark evaluation of the full system across multiple queries
-    and computes precision, recall and F1 score for hallucination detection.
-
-    This is the file that generates the numbers you show your supervisor:
-    "Our system detected X% of hallucinations with Y% precision."
-
-    HOW IT WORKS:
-      You provide a list of queries. Each query is labelled as either
-      "grounded" (the answer should be in the document) or "hallucinated"
-      (the answer is not in the document — the LLM would have to make it up).
-
-      The system runs every query through the full pipeline and predicts
-      grounded or hallucinated. We compare prediction vs label and compute:
-
-      Precision: of all answers the system flagged as hallucinated,
-                 what fraction actually were hallucinated?
-                 High precision = when we say hallucinated, we're right.
-
-      Recall:    of all queries that should have been flagged,
-                 what fraction did the system catch?
-                 High recall = we catch most hallucinations.
-
-      F1:        harmonic mean of precision and recall.
-                 Balances both. This is the headline metric.
-
-    HOW TO USE:
-      1. Edit EVAL_QUERIES below — add your own questions
-         Label "grounded" for questions your document can answer.
-         Label "hallucinated" for questions it cannot answer.
-      2. Run: python evaluate.py
-      3. The benchmark table and F1 score are printed and saved to
-         eval_results.csv for your report.
-
-Usage:
-    python evaluate.py
-    python evaluate.py --skip_nli_filter    # faster, less accurate
-    python evaluate.py --output my_results.csv
-"""
-
 import sys, os, csv, argparse
 from datetime import datetime
 sys.path.insert(0, os.path.dirname(__file__))
@@ -87,11 +44,6 @@ def run_evaluation(
     skip_nli_filter:  bool = False,
     output_csv:       str  = "eval_results.csv",
 ) -> dict:
-    """
-    Run all queries through the full pipeline and compute metrics.
-
-    Returns a dict with precision, recall, F1, and per-query results.
-    """
     results = []
     total   = len(queries)
 

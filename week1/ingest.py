@@ -1,10 +1,3 @@
-"""
-Step 1: Document Ingestion & Chunking
-------------------------------------------------
-Loads documents from a folder, splits them into chunks,
-embeds them, and stores in a FAISS vector database.
-"""
-
 import os
 import argparse
 from pathlib import Path
@@ -21,7 +14,7 @@ from langchain_community.vectorstores import FAISS
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"  # free, no API key
+EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"  
 CHUNK_SIZE      = 500    # characters per chunk
 CHUNK_OVERLAP   = 50     # overlap so context isn't cut mid-sentence
 

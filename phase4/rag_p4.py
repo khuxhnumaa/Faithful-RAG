@@ -1,32 +1,3 @@
-"""
-Week 4 - File 3: rag_pipeline_w4.py
---------------------------------------
-WHAT THIS FILE DOES:
-    This is the COMPLETE end-to-end pipeline combining all four weeks.
-    It is the single entry point for the entire hallucination detection system.
-
-    When you run this file with a query, it:
-      1. Retrieves chunks from FAISS (Week 1)
-      2. Applies similarity threshold filter (Week 2)
-      3. Applies NLI context filter (Week 2)
-      4. Sends clean context to Llama and gets an answer (Week 1)
-      5. Splits the answer into sentences (Week 3)
-      6. Runs NLI detection on each sentence (Week 3)
-      7. Computes RAGAS scores — faithfulness, relevance, recall (Week 4)
-      8. Applies threshold to get verdict (Week 4)
-      9. If hallucinated: rewrites query and retries once (Week 4)
-      10. Returns the final VerdictResult with everything
-
-    This file also defines RAGResultW4 — the master dataclass that
-    carries every piece of information produced by the full system.
-    Week 5's Streamlit app reads directly from this dataclass to
-    build the UI.
-
-Usage:
-    python rag_pipeline_w4.py --query "What method does this paper propose?"
-    python rag_pipeline_w4.py --query "Who won the Nobel Prize 2024?"
-"""
-
 import sys, os, argparse
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'week3'))
@@ -53,15 +24,6 @@ SIM_THRESHOLD = 0.60
 
 @dataclass
 class RAGResultW4:
-    """
-    Master dataclass — carries every piece of data produced by the full system.
-    Week 5 Streamlit reads from this directly.
-
-    Fields:
-      w3_result    — Week 3 output (retrieval, filters, answer, per-sentence NLI)
-      scores       — RAGAS metrics (faithfulness, relevance, recall, combined)
-      result       — Final VerdictResult (verdict, final answer, disclaimer)
-    """
     w3_result: RAGResultW3
     scores:    RAGASScores
     result:    VerdictResult
@@ -106,20 +68,6 @@ def run_full_pipeline(
     skip_nli_filter:  bool  = False,
     verbose:          bool  = True,
 ) -> RAGResultW4:
-    """
-    Run the complete 4-week hallucination detection pipeline.
-
-    Args:
-        query:           user's question (any topic, any document)
-        db_path:         path to FAISS vector database
-        sim_threshold:   cosine similarity cutoff for Week 2 filter
-        skip_nli_filter: skip Week 2 NLI filter (faster, less accurate)
-        verbose:         print detailed logs
-
-    Returns:
-        RAGResultW4 — master result with verdict, scores, sentences
-    """
-
     # ── Weeks 1–3: retrieve, filter, generate, detect ─────────────────────────
     w3_result = run_rag_w3(
         query=query,
@@ -184,7 +132,7 @@ def run_full_pipeline(
         answer=w3_result.answer,
         scores=scores,
         detection=w3_result.detection_result,
-        pipeline_fn=requery_fn,
+        pipeline_fn=None,    # ← disables re-query completely
     )
 
     final = RAGResultW4(

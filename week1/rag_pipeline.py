@@ -1,17 +1,3 @@
-"""
-Week 1 - Step 2: Core RAG Pipeline
-------------------------------------
-Loads the FAISS vector DB, retrieves relevant chunks for a query,
-then generates an answer using a local LLM via Ollama or HuggingFace.
-
-Usage:
-    python rag_pipeline.py --query "What is the capital of France?"
-
-Requirements (free, no API key):
-    - Ollama installed + a model pulled:  ollama pull mistral
-    - OR: HuggingFace transformers (slower, no install needed)
-"""
-
 import argparse
 from dataclasses import dataclass, field
 from typing import List
@@ -84,10 +70,7 @@ def retrieve(vectorstore, query: str, top_k: int = TOP_K):
 # ── Context Builder ───────────────────────────────────────────────────────────
 
 def build_context(docs: List[Document]) -> str:
-    """
-    Combine retrieved chunks into a single context string.
-    Each chunk is numbered so the LLM (and verifier) can cite sources.
-    """
+   
     parts = []
     for i, doc in enumerate(docs, 1):
         src = doc.metadata.get("source", "unknown")
@@ -97,9 +80,8 @@ def build_context(docs: List[Document]) -> str:
 
 # ── Prompt ────────────────────────────────────────────────────────────────────
 
-RAG_PROMPT_TEMPLATE = """You are a helpful assistant. Answer the question using ONLY the information in the context below.
+RAG_PROMPT_TEMPLATE = """You are a helpful assistant. Answer the question using the information in the context below and your global information.
 If the answer is not in the context, say "I don't have enough information to answer this."
-Do NOT make up facts that are not in the context.
 
 Context:
 {context}
@@ -112,10 +94,6 @@ Answer:"""
 # ── LLM Backends ─────────────────────────────────────────────────────────────
 
 def answer_with_ollama(prompt: str, model: str = OLLAMA_MODEL) -> str:
-    """
-    Generate answer using Ollama (local LLM, free, no API key).
-    Install: https://ollama.com  then run: ollama pull mistral
-    """
     try:
         from langchain_community.llms import Ollama
         llm = Ollama(model=model, temperature=0)
@@ -125,10 +103,7 @@ def answer_with_ollama(prompt: str, model: str = OLLAMA_MODEL) -> str:
 
 
 def answer_with_huggingface(prompt: str, model: str = HF_MODEL) -> str:
-    """
-    Fallback: use a small HuggingFace model locally.
-    Slower but requires no install beyond pip packages.
-    """
+    
     from transformers import pipeline
     print(f"[llm] Loading HuggingFace model: {model} (first run downloads it) ...")
     pipe = pipeline(
@@ -143,10 +118,7 @@ def answer_with_huggingface(prompt: str, model: str = HF_MODEL) -> str:
 # ── Main Pipeline ─────────────────────────────────────────────────────────────
 
 def run_rag(query: str, db_path: str = DB_PATH, backend: str = LLM_BACKEND) -> RAGResult:
-    """
-    Full RAG pipeline: retrieve → build context → generate answer.
-    Returns a RAGResult with all intermediate data (needed by verifier in Week 4).
-    """
+    
     # 1. Retrieve
     vectorstore = load_retriever(db_path)
     docs, scores = retrieve(vectorstore, query)

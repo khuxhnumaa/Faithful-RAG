@@ -1,10 +1,3 @@
-"""
-Step 2: NLI Context Filter
---------------------------------------
-After the similarity filter, this applies NLI (Natural Language Inference)
-to check whether each surviving chunk logically ENTAILS the query.
-"""
-
 from dataclasses import dataclass, field
 from typing import List, Dict
 from langchain_core.documents import Document
@@ -55,7 +48,7 @@ class NLIFilter:
         self._pipeline  = None   # lazy load — only downloads on first use
 
     def _load(self):
-        """Load model on first use (downloads ~500MB once, then cached)."""
+
         if self._pipeline is None:
             from transformers import pipeline
             print(f"[nli_filter] Loading NLI model: {self.model_name}")

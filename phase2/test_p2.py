@@ -5,7 +5,6 @@ import os
 import argparse
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'week1'))
-
 from rag_p2 import run_rag_w2
 
 
