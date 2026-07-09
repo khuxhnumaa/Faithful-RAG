@@ -22,12 +22,14 @@ from nli_filter import NLIFilter, NLIFilterResult, handle_empty_context
 EMBEDDING_MODEL    = "sentence-transformers/all-MiniLM-L6-v2"
 DB_PATH            = "../week1/vectordb"
 TOP_K              = 6       # retrieve more initially — filters will trim down
-SIM_THRESHOLD      = 0.5    # Week 2 filter 1
+SIM_THRESHOLD      = 0.2    # Week 2 filter 1
 OLLAMA_MODEL       = "llama3.2:3b"
 
-RAG_PROMPT = """You are a helpful assistant
-If the answer is not in the context, say exactly: "I don't have enough information to answer this from the provided documents."
-
+RAG_PROMPT = """You are a helpful assistant with broad general knowledge.
+Answer the question using the provided context as your primary source.
+If the context contains relevant information, prioritize it in your answer.
+If the context does not fully cover the question, use your general knowledge to give a complete answer.
+Always be accurate and helpful.
 
 Context:
 {context}
@@ -35,7 +37,6 @@ Context:
 Question: {query}
 
 Answer:"""
-
 
 # ── Result dataclass ──────────────────────────────────────────────────────────
 
