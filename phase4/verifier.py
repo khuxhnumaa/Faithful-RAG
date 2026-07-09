@@ -10,8 +10,8 @@ from ragas_scorer import RAGASScores
 # ── Verdict thresholds ────────────────────────────────────────────────────────
 
 THRESHOLDS = {
-    "grounded":     0.75,
-    "borderline":   0.50,
+    "grounded":     0.55,
+    "borderline":   0.5,   # anything below this is "hallucinated"
 }
 
 VERDICT_LABELS = {
@@ -70,10 +70,10 @@ class VerdictResult:
 
 # ── Verdict logic ─────────────────────────────────────────────────────────────
 
-def apply_threshold(combined_score: float) -> str:
-    if combined_score >= THRESHOLDS["grounded"]:
+def apply_threshold(combined_score: float, thresholds: dict) -> str:
+    if combined_score >= thresholds["grounded"]:
         return "grounded"
-    elif combined_score >= THRESHOLDS["borderline"]:
+    elif combined_score >= thresholds["borderline"]:
         return "borderline"
     else:
         return "hallucinated"
@@ -96,49 +96,36 @@ class Verifier:
         self.thresholds = thresholds or THRESHOLDS
 
     def verify(self, query, answer, scores, detection,
-           pipeline_fn=None, is_retry=False):   # ← add is_retry
+               pipeline_fn=None, is_retry=False):
 
-        verdict = apply_threshold(scores.combined)
+        verdict = apply_threshold(scores.combined, self.thresholds)
 
-        # ── Hallucinated: attempt re-query ONLY if this isn't already a retry ──
-        if verdict == "hallucinated" and not is_retry and pipeline_fn:
-            rewritten_query = f"Based only on the document provided, answer this: {query}"
-            print(f"[verifier] Re-querying once with: {rewritten_query}")
-            try:
-                retry = pipeline_fn(rewritten_query)
-                # mark retry result so it doesn't loop again
-                retry.result.requery_attempted = True
-                retry.result.requery_succeeded = retry.scores.combined >= self.thresholds["borderline"]
-                return retry.result
-            except Exception as e:
-                print(f"[verifier] Re-query error: {e}")
-            # ── Grounded ──────────────────────────────────────────────────────────
-            if verdict == "grounded":
-                return VerdictResult(
-                    query=query,
-                    verdict="grounded",
-                    scores=scores,
-                    final_answer=answer,
-                    hallucinated_sentences=detection.hallucinated_sentences,
-                    uncertain_sentences=detection.uncertain_sentences,
-                )
+        # ── Grounded: return immediately, no retry logic involved ────────────
+        if verdict == "grounded":
+            return VerdictResult(
+                query=query,
+                verdict="grounded",
+                scores=scores,
+                final_answer=answer,
+                hallucinated_sentences=detection.hallucinated_sentences,
+                uncertain_sentences=detection.uncertain_sentences,
+            )
 
-            # ── Borderline ────────────────────────────────────────────────────────
-            if verdict == "borderline":
-                return VerdictResult(
-                    query=query,
-                    verdict="borderline",
-                    scores=scores,
-                    final_answer=answer,
-                    hallucinated_sentences=detection.hallucinated_sentences,
-                    uncertain_sentences=detection.uncertain_sentences,
-                    disclaimer=build_disclaimer(verdict, scores),
-                )
+        # ── Borderline: return immediately, no retry logic involved ──────────
+        if verdict == "borderline":
+            return VerdictResult(
+                query=query,
+                verdict="borderline",
+                scores=scores,
+                final_answer=answer,
+                hallucinated_sentences=detection.hallucinated_sentences,
+                uncertain_sentences=detection.uncertain_sentences,
+                disclaimer=build_disclaimer(verdict, scores),
+            )
 
-            # ── Hallucinated ──────────────────────────────────────────────────────
-            print(f"\n[verifier] Verdict is HALLUCINATED.")
+        # ── Hallucinated: try a re-query once, unless this is already a retry ─
+        print(f"\n[verifier] Verdict is HALLUCINATED.")
 
-        # FIX 2: if this is already a retry, stop here — no more looping
         if is_retry or pipeline_fn is None:
             return VerdictResult(
                 query=query,
@@ -156,8 +143,7 @@ class Verifier:
                 requery_succeeded=False,
             )
 
-        # FIX 3: clean, short rewrite — just the original query, no appending
-        rewritten_query = query   # ← send the original query as-is on retry
+        rewritten_query = query
         print(f"[verifier] Retrying once with original query ...")
 
         try:

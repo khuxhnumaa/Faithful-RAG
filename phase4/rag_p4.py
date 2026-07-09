@@ -17,7 +17,7 @@ from verifier        import Verifier, VerdictResult
 # ── Config ────────────────────────────────────────────────────────────────────
 
 DB_PATH       = "../week1/vectordb"
-SIM_THRESHOLD = 0.60
+SIM_THRESHOLD = 0.20
 
 
 # ── Master result dataclass ───────────────────────────────────────────────────

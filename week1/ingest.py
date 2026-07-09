@@ -16,7 +16,7 @@ from langchain_community.vectorstores import FAISS
 
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"  
 CHUNK_SIZE      = 500    # characters per chunk
-CHUNK_OVERLAP   = 50     # overlap so context isn't cut mid-sentence
+CHUNK_OVERLAP   = 100   # overlap so context isn't cut mid-sentence
 
 
 # ── Loaders ───────────────────────────────────────────────────────────────────

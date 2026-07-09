@@ -10,19 +10,16 @@ from nli_detector import DetectionResult
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
 # Weights for the combined score
-WEIGHT_FAITHFULNESS = 0.5
-WEIGHT_RELEVANCE    = 0.3
-WEIGHT_RECALL       = 0.2
+WEIGHT_FAITHFULNESS = 0.25
+WEIGHT_RELEVANCE    = 0.4
+WEIGHT_RECALL       = 0.35
 
 
 # ── Data structure ────────────────────────────────────────────────────────────
 
 @dataclass
 class RAGASScores:
-    """
-    Stores all three RAGAS metrics plus the combined score.
-    This is what gets passed to the verifier in verifier.py.
-    """
+    
     faithfulness:    float   # from NLI detection (Week 3)
     answer_relevance: float  # answer vs query similarity
     context_recall:  float   # how much of answer is traceable to context

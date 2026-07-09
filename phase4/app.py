@@ -62,14 +62,14 @@ def get_active_doc():
 # SIDEBAR
 # ══════════════════════════════════════════════════════════════════════════════
 with st.sidebar:
-    st.markdown("## 📄 Documents")
+    st.markdown("##DOCUMENTS")
 
     # ── Upload new document ────────────────────────────────────────────────────
     uploaded = st.file_uploader(
         "Upload a new document",
         type=["pdf", "txt"],
         key="uploader",
-        help="Saved permanently — survives page refresh.",
+        help="Saved permanently",
     )
 
     if uploaded:
@@ -194,7 +194,7 @@ with st.sidebar:
     # ── Settings ───────────────────────────────────────────────────────────────
     st.markdown("## Settings")
     sim_threshold = st.slider(
-        "Similarity threshold", 0.20, 0.90, 0.30, 0.05,
+        "Similarity threshold", 0.20, 0.10, 0.15, 0.05,
         help="Chunks below this score are dropped. Lower = keep more chunks."
     )
     skip_nli = st.checkbox(
@@ -325,10 +325,14 @@ with tab_q:
             )
 
         a, b, c, d = st.columns(4)
-        card(a, "Faithfulness",     r.scores.faithfulness,     "Grounded / total sentences",       0.75)
+        # card(a, "Faithfulness",     r.scores.faithfulness,     "Grounded / total sentences",       0.75)
+        # card(b, "Answer relevance", r.scores.answer_relevance, "Query ↔ answer cosine similarity", 0.65)
+        # card(c, "Context recall",   r.scores.context_recall,   "Sentences traceable to chunks",     0.65)
+        # card(d, "Combined",         r.scores.combined,         "Weighted: 0.5 / 0.3 / 0.2",        0.75)
+        card(a, "Faithfulness",     r.scores.faithfulness,     "Grounded / total sentences",       0.50)
         card(b, "Answer relevance", r.scores.answer_relevance, "Query ↔ answer cosine similarity", 0.65)
         card(c, "Context recall",   r.scores.context_recall,   "Sentences traceable to chunks",     0.65)
-        card(d, "Combined",         r.scores.combined,         "Weighted: 0.5 / 0.3 / 0.2",        0.75)
+        card(d, "Combined",         r.scores.combined,         "Weighted: 0.5 / 0.3 / 0.2",        0.50)
 
         st.divider()
 
@@ -407,9 +411,9 @@ with tab_q:
 
         if r.result.requery_attempted:
             if r.result.requery_succeeded:
-                st.info("🔄 Auto re-query triggered and succeeded.")
+                st.info("Auto re-query triggered and succeeded.")
             else:
-                st.error("🔄 Auto re-query triggered but also failed.")
+                st.error("Auto re-query triggered but also failed.")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
