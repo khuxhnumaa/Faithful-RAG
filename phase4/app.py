@@ -232,8 +232,8 @@ with tab_q:
     # Active doc banner
     st.markdown(
         f"<div style='padding:8px 14px;background:#EEF2FF;border-radius:8px;"
-        f"border-left:4px solid #1F3066;margin-bottom:16px;font-size:13px'>"
-        f"📄 Active document: <b>{active_doc.name}</b> · "
+        f"border-left:4px solid #1F3066;margin-bottom:16px;font-size:13px;color:#000000'>"
+        f"Active document: <b>{active_doc.name}</b> · "
         f"{active_doc.chunk_count} chunks · {active_doc.short_date}"
         f"</div>",
         unsafe_allow_html=True,
@@ -375,7 +375,7 @@ with tab_q:
 
         # Retrieved chunks
         with st.expander(
-            f"📦 Chunks  ({r.raw_chunks} retrieved · "
+            f"Chunks  ({r.raw_chunks} retrieved · "
             f"{r.kept_after_sim} after sim · "
             f"{r.kept_after_nli_filter} after NLI)"
         ):
@@ -397,7 +397,7 @@ with tab_q:
                 )
 
         # Per-sentence table
-        with st.expander("🔬 Per-sentence NLI breakdown"):
+        with st.expander("Per-sentence NLI breakdown"):
             if r.sentences:
                 st.dataframe({
                     "Sentence":   [s.sentence[:80]+("…" if len(s.sentence)>80 else "")
@@ -454,7 +454,7 @@ with tab_e:
                                   key=f"el{i}")
             edited.append({"query": qt, "label": lb})
 
-        if st.button("▶ Run Evaluation", type="primary"):
+        if st.button("Run Evaluation", type="primary"):
             from rag_p4 import run_full_pipeline
             rows  = []
             bar   = st.progress(0)
