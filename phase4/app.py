@@ -62,7 +62,7 @@ def get_active_doc():
 # SIDEBAR
 # ══════════════════════════════════════════════════════════════════════════════
 with st.sidebar:
-    st.markdown("##DOCUMENTS")
+    st.markdown("## DOCUMENTS")
 
     # ── Upload new document ────────────────────────────────────────────────────
     uploaded = st.file_uploader(

@@ -5,7 +5,7 @@ from langchain_core.documents import Document
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-DEFAULT_THRESHOLD = 0.60  
+DEFAULT_THRESHOLD = 0.50
 
 # ── Data Structures ───────────────────────────────────────────────────────────
 

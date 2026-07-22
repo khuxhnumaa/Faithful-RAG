@@ -10,8 +10,8 @@ from ragas_scorer import RAGASScores
 # ── Verdict thresholds ────────────────────────────────────────────────────────
 
 THRESHOLDS = {
-    "grounded":     0.55,
-    "borderline":   0.5,   # anything below this is "hallucinated"
+    "grounded":     0.60,
+    "borderline":   0.50,   # anything below this is "hallucinated"
 }
 
 VERDICT_LABELS = {
@@ -68,6 +68,7 @@ class VerdictResult:
         print(f"{'='*65}\n")
 
 
+
 # ── Verdict logic ─────────────────────────────────────────────────────────────
 
 def apply_threshold(combined_score: float, thresholds: dict) -> str:
@@ -91,12 +92,37 @@ def build_disclaimer(verdict: str, scores: RAGASScores) -> str:
 
 # ── Verifier ──────────────────────────────────────────────────────────────────
 
+# class Verifier:
+#     def __init__(self, thresholds: dict = None):
+#         self.thresholds = thresholds or THRESHOLDS
+
+#     def verify(self, query, answer, scores, detection,
+#                pipeline_fn=None, is_retry=False):
+
+#         verdict = apply_threshold(scores.combined, self.thresholds)
+CONTEXT_RELEVANCE_GATE = 0.35  # tune this using your 70 examples first
+
 class Verifier:
     def __init__(self, thresholds: dict = None):
         self.thresholds = thresholds or THRESHOLDS
 
     def verify(self, query, answer, scores, detection,
                pipeline_fn=None, is_retry=False):
+
+        # ── Hard gate: was the retrieved context even about this topic? ──────
+        if scores.context_relevance < CONTEXT_RELEVANCE_GATE:
+            return VerdictResult(
+                query=query,
+                verdict="hallucinated",
+                scores=scores,
+                final_answer=(
+                    "I could not find relevant information in the provided "
+                    "document for this query."
+                ),
+                hallucinated_sentences=detection.hallucinated_sentences,
+                uncertain_sentences=detection.uncertain_sentences,
+                disclaimer="Retrieved context was not sufficiently relevant to the query.",
+            )
 
         verdict = apply_threshold(scores.combined, self.thresholds)
 

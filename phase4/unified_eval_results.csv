@@ -1,0 +1,71 @@
+paper,query,label,predicted,verdict,faithfulness,combined,correct
+RAGTruth,What is the main contribution of the RAGTruth paper?,grounded,grounded,borderline,0.875,0.5929,True
+RAGTruth,What datasets are used in the RAGTruth experiments?,grounded,grounded,borderline,0.0,0.599,True
+RAGTruth,How is hallucination defined in RAGTruth?,grounded,grounded,grounded,1.0,0.8491,True
+RAGTruth,What annotation strategy does RAGTruth propose?,grounded,grounded,grounded,1.0,0.7293,True
+RAGTruth,What are the limitations discussed in RAGTruth?,grounded,grounded,borderline,0.5,0.5669,True
+RAGTruth,What future work is suggested in the RAGTruth paper?,grounded,hallucinated,hallucinated,0.8889,0.4569,False
+Transformer,What architecture is proposed in Attention Is All You Need?,grounded,grounded,borderline,1.0,0.5583,True
+Transformer,Why is self-attention used in the Transformer?,grounded,grounded,grounded,1.0,0.8304,True
+Transformer,What datasets were used to evaluate the Transformer model?,grounded,grounded,grounded,1.0,0.634,True
+Transformer,What is positional encoding in the Transformer paper?,grounded,grounded,grounded,1.0,0.6547,True
+Transformer,How many encoder layers are used in the Transformer?,grounded,grounded,grounded,1.0,0.8133,True
+Transformer,What are the experimental results of the Transformer?,grounded,grounded,borderline,0.8,0.5305,True
+BERT,What is masked language modeling in BERT?,grounded,grounded,grounded,1.0,0.9131,True
+BERT,What is next sentence prediction in BERT?,grounded,grounded,grounded,0.6667,0.81,True
+BERT,What datasets were used during BERT pretraining?,grounded,grounded,grounded,1.0,0.918,True
+BERT,How does BERT differ from previous language models?,grounded,grounded,grounded,1.0,0.887,True
+BERT,What benchmark tasks were evaluated in the BERT paper?,grounded,grounded,grounded,1.0,0.8074,True
+BERT,What are the key findings of the BERT paper?,grounded,grounded,grounded,1.0,0.7243,True
+ResNet,What problem does residual learning solve in ResNet?,grounded,grounded,grounded,1.0,0.899,True
+ResNet,What is a residual block in ResNet?,grounded,grounded,grounded,0.8333,0.88,True
+ResNet,Which datasets were used to evaluate ResNet?,grounded,grounded,grounded,0.5,0.7968,True
+ResNet,How deep is the largest ResNet network?,grounded,grounded,grounded,1.0,0.9462,True
+ResNet,What improvements were reported in the ResNet paper?,grounded,grounded,grounded,1.0,0.8178,True
+ResNet,What are the conclusions of the ResNet paper?,grounded,grounded,grounded,1.0,0.8426,True
+YOLOv1,What object detection framework does YOLO propose?,grounded,grounded,grounded,1.0,0.9338,True
+YOLOv1,How does YOLO differ from previous object detectors?,grounded,grounded,grounded,1.0,0.935,True
+YOLOv1,Which datasets were used to evaluate YOLO?,grounded,grounded,grounded,1.0,0.9169,True
+YOLOv1,What mAP does YOLO report in the paper?,grounded,grounded,grounded,1.0,0.856,True
+YOLOv1,What are the strengths of the YOLO detection system?,grounded,grounded,grounded,0.7143,0.8549,True
+YOLOv1,What weaknesses does the YOLO paper discuss?,grounded,grounded,borderline,0.0,0.5898,True
+AlexNet,What challenge did AlexNet win?,grounded,grounded,grounded,1.0,0.8432,True
+AlexNet,Which activation function was introduced in AlexNet?,grounded,grounded,grounded,0.5,0.6141,True
+AlexNet,Which dataset was used to train AlexNet?,grounded,grounded,grounded,1.0,0.9395,True
+AlexNet,What regularization methods were used in AlexNet?,grounded,grounded,grounded,1.0,0.6115,True
+AlexNet,What hardware was used to train AlexNet?,grounded,grounded,grounded,1.0,0.7104,True
+AlexNet,What performance did AlexNet achieve?,grounded,grounded,grounded,0.0,0.6091,True
+EfficientNet,What scaling method does EfficientNet propose?,grounded,grounded,grounded,1.0,0.8734,True
+EfficientNet,What is compound scaling in EfficientNet?,grounded,grounded,grounded,1.0,0.9347,True
+EfficientNet,Which benchmark datasets were used for EfficientNet?,grounded,grounded,grounded,1.0,0.8138,True
+EfficientNet,How does EfficientNet improve computational efficiency?,grounded,grounded,grounded,1.0,0.8568,True
+EfficientNet,What results did EfficientNet achieve?,grounded,grounded,grounded,1.0,0.873,True
+EfficientNet,What limitations does the EfficientNet paper discuss?,grounded,grounded,grounded,1.0,0.7577,True
+SAM,What problem does Segment Anything Model solve?,grounded,grounded,grounded,1.0,0.7443,True
+SAM,What is the SA-1B dataset in the SAM paper?,grounded,grounded,grounded,0.0,0.6362,True
+SAM,How does promptable segmentation work in SAM?,grounded,grounded,grounded,1.0,0.9292,True
+SAM,How many images are in the SAM dataset?,grounded,grounded,grounded,1.0,0.9616,True
+SAM,What experiments were conducted in the SAM paper?,grounded,grounded,grounded,0.875,0.6558,True
+SAM,What are the conclusions of the SAM paper?,grounded,grounded,grounded,1.0,0.6572,True
+GPT-3,How many parameters does GPT-3 have?,grounded,grounded,grounded,1.0,0.9461,True
+GPT-3,What is in-context learning in GPT-3?,grounded,grounded,grounded,1.0,0.7749,True
+GPT-3,What benchmark datasets were used to evaluate GPT-3?,grounded,grounded,grounded,1.0,0.8568,True
+GPT-3,How does few-shot learning work in GPT-3?,grounded,grounded,grounded,1.0,0.859,True
+GPT-3,What are the limitations of GPT-3?,grounded,grounded,grounded,1.0,0.7359,True
+GPT-3,What conclusions does the GPT-3 paper draw?,grounded,grounded,grounded,1.0,0.7582,True
+Decade of DL,What is the main theme of this survey paper?,grounded,grounded,borderline,1.0,0.5009,True
+Decade of DL,What deep learning milestones are covered?,grounded,grounded,grounded,1.0,0.852,True
+Decade of DL,What applications of deep learning are discussed?,grounded,grounded,grounded,1.0,0.8873,True
+Decade of DL,What challenges in deep learning are mentioned?,grounded,grounded,grounded,0.8333,0.8077,True
+Decade of DL,What future directions are discussed in the paper?,grounded,hallucinated,hallucinated,0.9333,0.5089,False
+Decade of DL,What conclusions are drawn in this survey?,grounded,hallucinated,hallucinated,0.8,0.4568,False
+NONE,Who won the FIFA World Cup in 2022?,hallucinated,hallucinated,hallucinated,1.0,0.4847,True
+NONE,What is the weather forecast for tomorrow in Delhi?,hallucinated,hallucinated,hallucinated,1.0,0.5661,True
+NONE,What is the recipe for chicken biryani?,hallucinated,hallucinated,hallucinated,1.0,0.5554,True
+NONE,Who is the Prime Minister of India right now?,hallucinated,hallucinated,hallucinated,1.0,0.3306,True
+NONE,What is the current stock price of Tesla?,hallucinated,hallucinated,hallucinated,0.6667,0.5857,True
+NONE,How do I install Ubuntu 22 on a laptop?,hallucinated,hallucinated,hallucinated,1.0,0.5986,True
+NONE,What movies won the Oscar for Best Picture in 2023?,hallucinated,hallucinated,hallucinated,0.6,0.47,True
+NONE,What is the boiling point of nitrogen?,hallucinated,hallucinated,hallucinated,0.75,0.5245,True
+NONE,Who is the CEO of OpenAI right now?,hallucinated,hallucinated,hallucinated,1.0,0.5842,True
+NONE,What is the population of Mumbai in 2024?,hallucinated,hallucinated,hallucinated,1.0,0.6026,True

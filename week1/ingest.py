@@ -22,10 +22,7 @@ CHUNK_OVERLAP   = 100   # overlap so context isn't cut mid-sentence
 # ── Loaders ───────────────────────────────────────────────────────────────────
 
 def load_documents(docs_dir: str):
-    """
-    Load .txt and .pdf files from a directory.
-    Returns a list of LangChain Document objects.
-    """
+    
     docs_path = Path(docs_dir)
     if not docs_path.exists():
         raise FileNotFoundError(f"Docs directory not found: {docs_dir}")

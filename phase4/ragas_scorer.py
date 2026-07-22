@@ -19,11 +19,11 @@ WEIGHT_RECALL       = 0.35
 
 @dataclass
 class RAGASScores:
-    
-    faithfulness:    float   # from NLI detection (Week 3)
-    answer_relevance: float  # answer vs query similarity
-    context_recall:  float   # how much of answer is traceable to context
-    combined:        float   # weighted average of all three
+    faithfulness:      float
+    answer_relevance:  float
+    context_recall:    float
+    context_relevance: float   # ← new
+    combined:          float
 
     def display(self):
         print(f"\n[RAGAS SCORES]")
@@ -115,21 +115,61 @@ class RAGASScorer:
         print(f"[ragas] Context recall: {score:.4f} "
               f"({recalled}/{len(sentences)} sentences traceable to context)")
         return score
+    # ── Metric 4: Context relevance (query vs retrieved context) ─────────────
+
+    def compute_context_relevance(self, query: str, context: str) -> float:
+        """Is the retrieved context actually about the query topic?"""
+        if not context.strip():
+            return 0.0
+        embedder = self._load_embedder()
+        import numpy as np
+        q_vec = embedder.encode(query, normalize_embeddings=True)
+        chunks = [c.strip() for c in context.split("---") if c.strip()] or [context]
+        ctx_vecs = embedder.encode(chunks, normalize_embeddings=True)
+        sims = [float(np.dot(q_vec, c)) for c in ctx_vecs]
+        score = round(max(sims), 4) if sims else 0.0
+        print(f"[ragas] Context relevance: {score:.4f} (query-context cosine similarity)")
+        return score
 
     # ── Combined score ────────────────────────────────────────────────────────
 
-    def compute(
-        self,
-        query:     str,
-        answer:    str,
-        context:   str,
-        detection: DetectionResult,
-    ) -> RAGASScores:
+    # def compute(
+    #     self,
+    #     query:     str,
+    #     answer:    str,
+    #     context:   str,
+    #     detection: DetectionResult,
+    # ) -> RAGASScores:
+    #     print(f"\n[ragas] Computing RAGAS metrics ...")
+
+    #     f = self.compute_faithfulness(detection)
+    #     r = self.compute_answer_relevance(query, answer)
+    #     c = self.compute_context_recall(detection, context)
+
+    #     combined = round(
+    #         WEIGHT_FAITHFULNESS * f +
+    #         WEIGHT_RELEVANCE    * r +
+    #         WEIGHT_RECALL       * c,
+    #         4
+    #     )
+    #     print(f"[ragas] Combined score: {combined:.4f} "
+    #           f"(w={WEIGHT_FAITHFULNESS}/{WEIGHT_RELEVANCE}/{WEIGHT_RECALL})")
+
+    #     scores = RAGASScores(
+    #         faithfulness=f,
+    #         answer_relevance=r,
+    #         context_recall=c,
+    #         combined=combined,
+    #     )
+    #     scores.display()
+    #     return scores
+    def compute(self, query, answer, context, detection) -> RAGASScores:
         print(f"\n[ragas] Computing RAGAS metrics ...")
 
-        f = self.compute_faithfulness(detection)
-        r = self.compute_answer_relevance(query, answer)
-        c = self.compute_context_recall(detection, context)
+        f  = self.compute_faithfulness(detection)
+        r  = self.compute_answer_relevance(query, answer)
+        c  = self.compute_context_recall(detection, context)
+        cr = self.compute_context_relevance(query, context)   # ← new
 
         combined = round(
             WEIGHT_FAITHFULNESS * f +
@@ -137,13 +177,12 @@ class RAGASScorer:
             WEIGHT_RECALL       * c,
             4
         )
-        print(f"[ragas] Combined score: {combined:.4f} "
-              f"(w={WEIGHT_FAITHFULNESS}/{WEIGHT_RELEVANCE}/{WEIGHT_RECALL})")
 
         scores = RAGASScores(
             faithfulness=f,
             answer_relevance=r,
             context_recall=c,
+            context_relevance=cr,   # ← new field
             combined=combined,
         )
         scores.display()

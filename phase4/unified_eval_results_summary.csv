@@ -1,0 +1,9 @@
+Metric,Our System,RAGTruth Benchmark,Difference
+Precision,76.9%,85.1%,-8.2%
+Recall,67.0%,72.4%,+27.6%
+F1 Score,87.0%,78.2%,+8.8%
+Accuracy,95.7%,79.6%,+16.1%
+TP,10,—,—
+FP,3,—,—
+FN,0,—,—
+TN,57,—,—
